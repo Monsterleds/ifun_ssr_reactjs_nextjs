@@ -19,11 +19,13 @@ interface UserData {
   password: string;
 }
 
-const SignIn: React.FC = () => {  
+const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const handleOnSubmit = useCallback(async (data: UserData) => {
     try {
+      formRef.current?.setErrors({});
+
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome é obrigatório'),
         email: Yup.string().required('Email é obrigatório').email('Email invalido'),

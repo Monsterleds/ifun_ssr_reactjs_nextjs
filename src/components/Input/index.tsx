@@ -39,9 +39,15 @@ const Input: React.FC<InputAttributes> = ({ name, ...rest }) => {
   }, []);
 
   return (
-    <Container isError={!!error} isSelected={isSelected} isFilled={isFilled} onFocus={handleOnClick} onBlur={handleOnBlured}>
-      <input ref={inputRef} {...rest} />
-    </Container>
+      <Container isError={!!error} isSelected={isSelected} isFilled={isFilled} onFocus={handleOnClick} onBlur={handleOnBlured}>
+        <input ref={inputRef} {...rest} />        
+        { error && 
+          <div>
+            <img src="/static/icons/warning.png" alt="icon_warning" />
+            <span>{error}</span>
+          </div>
+        }
+      </Container>
   );
 }
 
