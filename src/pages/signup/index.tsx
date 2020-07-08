@@ -3,8 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import * as Yup from 'yup';
 
-import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -12,50 +12,51 @@ import Input from '../../components/Input';
 import Header from '../../components/InitialHeader';
 import Button from '../../components/Button';
 
-import { Container, Content, InputContainer, SignUpLinkContainer, Logo } from './styles';
+import { Container, Content, InputContainer, SignInLinkContainer, Logo } from './styles';
 
 interface UserData {
   email: string;
   password: string;
 }
 
-const SignIn: React.FC = () => {
+const SignIn: React.FC = () => {  
   const formRef = useRef<FormHandles>(null);
 
   const handleOnSubmit = useCallback(async (data: UserData) => {
-   try {
+    try {
       const schema = Yup.object().shape({
+        name: Yup.string().required('Nome é obrigatório'),
         email: Yup.string().required('Email é obrigatório').email('Email invalido'),
-        password: Yup.string().required('Senha é obrigatório'),
+        password: Yup.string().min(6, 'Mínimo 6 caracteres'),
       });
 
-      await schema.validate(data, ({
+      await schema.validate(data, {
         abortEarly: false,
-      }));
+      });
+    } catch(err) {
+      if(err instanceof Yup.ValidationError){
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors);
 
-      alert('a');
-   } catch(err) {
-     if(err instanceof Yup.ValidationError) {
-      const errors = getValidationErrors(err);
-      
-      formRef.current?.setErrors(errors);
-
-      return;
-     }
-
-     alert('b');
-   }
+        return;
+      }
+    }
   }, []);
 
   return (
     <Container>
-      <Header isSelected="SignIn" />
+      <Header isSelected="SignUp" />
       <Head>
-        <title>SignIn | iFun</title>
+        <title>SignUp | iFun</title>
       </Head>
       <Content>
         <Form ref={formRef} onSubmit={(data) => handleOnSubmit(data)}>
           <Logo src="/static/logo.png" alt="logo"/>
+          <InputContainer>
+            <span>Nome</span>
+            <Input name="name" type="text" placeholder="John Doe" />
+          </InputContainer>
+
           <InputContainer>
             <span>Email</span>
             <Input name="email" type="text" placeholder="example@ifun.com" />
@@ -64,12 +65,12 @@ const SignIn: React.FC = () => {
           <InputContainer>
             <span>Senha</span>
             <Input name="password" type="password" placeholder="**********" />
-              <SignUpLinkContainer>
-                <img src="/static/icons/fiLogin.png" alt="login icon" />
-                <Link href="/signup"><a>Não tenho uma conta</a></Link>
-            </SignUpLinkContainer>
+              <SignInLinkContainer>
+                <Link href="/signin"><a>Já tenho uma conta</a></Link>
+                <img src="/static/icons/fiLogout.png" alt="login icon" />
+              </SignInLinkContainer>
           </InputContainer>
-          <Button type="submit">Entrar</Button>
+          <Button type="submit">Criar Conta</Button>
         </Form>
       </Content>
     </Container>

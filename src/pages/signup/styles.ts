@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { lighten } from 'polished';
 
 export const Container = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ export const Content = styled.div`
   margin-top: 48px;
   max-width: 725px;
   width: 100%;
-  height: 680px;
+  height: 800px;
   padding: 0 100px;
   box-shadow: 0px 4px 100px rgba(23, 23, 23, 0.1);
   border-radius: 8px;
@@ -33,7 +34,6 @@ export const Content = styled.div`
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 64px;
   width: 100%;
 
   span {
@@ -43,20 +43,21 @@ export const InputContainer = styled.div`
   }
 
   & + div {
-    margin-bottom: 29px;
+    margin-top: 29px;
   }
 `;
 
-export const SignUpLinkContainer = styled.div`
+export const SignInLinkContainer = styled.div`
       display: flex;
       align-items: center;
       justify-content: flex-end;
       align-self: flex-end;
       margin-top: 16px;
+      margin-bottom: 29px;
       transition: 0.2s;
 
       a {
-        margin-left: 10.5px;
+        margin-right: 10.5px;
         color: #434344;
         font-weight: 600;
       }
