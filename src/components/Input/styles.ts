@@ -8,6 +8,7 @@ interface InputProps {
 }
 
 export const Container = styled.label<InputProps>`
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -17,7 +18,6 @@ export const Container = styled.label<InputProps>`
   border : 2px solid #fff;
   background-color: #fff;
   -webkit-transition: 0.2s;
-
   cursor: text;
 
   input {
@@ -47,5 +47,22 @@ export const Container = styled.label<InputProps>`
 
   ${props => props.isError && css`
     border: 2px solid #FF4565;
+    margin-bottom: 16px;
   `}
+
+  div {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    top: 80px;
+    
+    span {
+      color: #FF4565;
+      font-size: 16px;
+      font-weight: medium;
+      margin-top: 7px;
+      margin-left: 8px;
+    }
+  }
 `;
