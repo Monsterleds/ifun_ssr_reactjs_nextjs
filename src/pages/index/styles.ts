@@ -38,7 +38,6 @@ export const Content = styled.div`
       background-color: #FF4565;
       width: 254px;
       height: 60px;
-      margin-top: 33px;
       border: 0;
       transition: 0.2s;
 
