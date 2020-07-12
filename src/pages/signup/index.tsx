@@ -7,6 +7,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
 import getValidationErrors from '../../utils/getValidationErrors';
+import { useAuth } from '../../hooks/auth';
 
 import Input from '../../components/Input';
 import Header from '../../components/InitialHeader';
@@ -15,12 +16,14 @@ import Button from '../../components/Button';
 import { Container, Content, InputContainer, SignInLinkContainer, Logo } from './styles';
 
 interface UserData {
+  name: string;
   email: string;
   password: string;
 }
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { hookSignUp } = useAuth();
 
   const handleOnSubmit = useCallback(async (data: UserData) => {
     try {
@@ -35,6 +38,8 @@ const SignIn: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
+
+      await hookSignUp({ name: data.name, email: data.email, password: data.password });
     } catch(err) {
       if(err instanceof Yup.ValidationError){
         const errors = getValidationErrors(err);
@@ -42,6 +47,8 @@ const SignIn: React.FC = () => {
 
         return;
       }
+
+      console.error(err);
     }
   }, []);
 

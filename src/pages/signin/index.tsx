@@ -7,6 +7,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
 import getValidationErrors from '../../utils/getValidationErrors';
+import { useAuth } from '../../hooks/auth';
 
 import Input from '../../components/Input';
 import Header from '../../components/InitialHeader';
@@ -21,6 +22,7 @@ interface UserData {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { hookSignIn } = useAuth();
 
   const handleOnSubmit = useCallback(async (data: UserData) => {
    try {
@@ -35,7 +37,7 @@ const SignIn: React.FC = () => {
         abortEarly: false,
       }));
 
-      alert('a');
+      await hookSignIn({ email: data.email, password: data.password });
    } catch(err) {
      if(err instanceof Yup.ValidationError) {
       const errors = getValidationErrors(err);
@@ -45,7 +47,7 @@ const SignIn: React.FC = () => {
       return;
      }
 
-     alert('b');
+     console.error(err);
    }
   }, []);
 

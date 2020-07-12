@@ -10,8 +10,8 @@ interface ReturnInitialProps {
 
 export default class MyDocument extends Document<ReturnInitialProps> {
   static getInitialProps({ renderPage }: any) {
-
     const sheet = new ServerStyleSheet();
+
     const page = renderPage((App:React.FC) => (props: any) =>
       sheet.collectStyles(<><App {...props} /><GlobalStyles /></>),
     );
@@ -31,8 +31,8 @@ export default class MyDocument extends Document<ReturnInitialProps> {
         {this.props.styleTags}
       </Head>
       <body>
-        <Main />
-        <NextScript />
+          <Main />
+          <NextScript />
       </body>
       </html>
     )
