@@ -26,18 +26,21 @@ interface AuthenticatedAttributes {
 
 interface ContextAttributes {
   user: UserAttributes;
+  token: string;
   hookSignIn(credentials: SignInAttributes): Promise<void>;
   hookSignUp(credentials: SignUpAttributes): Promise<void>;
 }
 
 const AuthContext = createContext<ContextAttributes>({} as ContextAttributes);
 const AuthProvider:React.FC = ({ children }) => {
+  const [userToken, setUserToken] = useState('');
   const [userData, setUserData] = useState<UserAttributes>(() => {
       const user = lscache.get('@ifun/user');
       const token = lscache.get('@ifun/token');
-      
+
       if(token && user) {
         const { email, name }: UserAttributes = JSON.parse(user);
+        setUserToken(token);
 
         return { email, name };
       }
@@ -55,8 +58,10 @@ const AuthProvider:React.FC = ({ children }) => {
       lscache.set('@ifun/token', data.token);
       lscache.set('@ifun/user', JSON.stringify(data.user));
 
+      setUserToken(data.token);
+
       setUserData(data.user);
-  }, [setUserData]);
+  }, [setUserData, setUserToken]);
 
   const hookSignUp = useCallback(
     async ({ name, email, password }: SignUpAttributes) => {
@@ -67,9 +72,8 @@ const AuthProvider:React.FC = ({ children }) => {
       });
   }, []);
 
-
   return (
-    <AuthContext.Provider value={{ user: userData, hookSignIn, hookSignUp }}>
+    <AuthContext.Provider value={{ user: userData, token: userToken, hookSignIn, hookSignUp }}>
       { children }
     </AuthContext.Provider>
   )
