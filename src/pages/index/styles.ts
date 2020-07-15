@@ -35,7 +35,7 @@ export const Content = styled.div`
       font-size: 24px;
       font-weight: 600;
       color: #ffffff;
-      background-color: #FF4565;
+      background-color: #ff4565;
       width: 254px;
       height: 60px;
       border: 0;

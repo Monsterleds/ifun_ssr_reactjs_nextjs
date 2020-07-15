@@ -15,6 +15,7 @@ interface SignUpAttributes {
 }
 
 interface UserAttributes {
+  id: string;
   name: string;
   email: string;
 }
@@ -32,21 +33,21 @@ interface ContextAttributes {
 }
 
 const AuthContext = createContext<ContextAttributes>({} as ContextAttributes);
-const AuthProvider:React.FC = ({ children }) => {
+const AuthProvider: React.FC = ({ children }) => {
   const [userToken, setUserToken] = useState('');
   const [userData, setUserData] = useState<UserAttributes>(() => {
-      const user = lscache.get('@ifun/user');
-      const token = lscache.get('@ifun/token');
+    const user = lscache.get('@ifun/user');
+    const token = lscache.get('@ifun/token');
 
-      if(token && user) {
-        const { email, name }: UserAttributes = JSON.parse(user);
-        setUserToken(token);
+    if (token && user) {
+      const { id, email, name }: UserAttributes = JSON.parse(user);
+      setUserToken(token);
 
-        return { email, name };
-      }
+      return { id, email, name };
+    }
 
-      return {} as UserAttributes;
-  })
+    return {} as UserAttributes;
+  });
 
   const hookSignIn = useCallback(
     async ({ email, password }: SignInAttributes) => {
@@ -61,28 +62,34 @@ const AuthProvider:React.FC = ({ children }) => {
       setUserToken(data.token);
 
       setUserData(data.user);
-  }, [setUserData, setUserToken]);
+    },
+    [setUserData, setUserToken],
+  );
 
   const hookSignUp = useCallback(
     async ({ name, email, password }: SignUpAttributes) => {
       await api.post<AuthenticatedAttributes>('/users', {
         name,
         email,
-        password
+        password,
       });
-  }, []);
+    },
+    [],
+  );
 
   return (
-    <AuthContext.Provider value={{ user: userData, token: userToken, hookSignIn, hookSignUp }}>
-      { children }
+    <AuthContext.Provider
+      value={{ user: userData, token: userToken, hookSignIn, hookSignUp }}
+    >
+      {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
-function useAuth() {
+function useAuth(): ContextAttributes {
   const context = useContext(AuthContext);
 
-  if(!context) {
+  if (!context) {
     throw new Error('DEU MERDA AMIGO');
   }
 

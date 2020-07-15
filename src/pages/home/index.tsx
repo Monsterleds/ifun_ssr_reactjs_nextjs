@@ -1,13 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { useAuth } from '../../hooks/auth';
 import { useFetch } from '../../hooks/useFetch';
 
 import Header from '../../components/LoggedHeader';
+import Posts from '../../components/Posts';
 
-import { Container, Content, ContentPost, ImageContainer } from './styles';
+import { Container, Content } from './styles';
 
 interface IPosts {
   id: string;
@@ -17,56 +17,68 @@ interface IPosts {
   likes: number;
 }
 
+interface IResponsePostsLikes {
+  post: {
+    id: string;
+  };
+}
+
 const home: React.FC = () => {
-  const { token } = useAuth();
   const [allPosts, setAllPosts] = useState([] as IPosts[]);
+  const [idsPosts, setIdsPosts] = useState(['']);
 
-  useMemo(async () => {
-    const response = await useFetch<IPosts>('/posts/all', token);
+  const { token, user } = useAuth();
 
-    if(!response) {
-      throw new Error('Something went wrong');
+  useEffect(() => {
+    async function requestPosts(): Promise<IPosts[]> {
+      const response = await useFetch<IPosts>('/posts/all', token);
+
+      if (!response) {
+        throw new Error('Database error, maybe is off');
+      }
+
+      const data = await useFetch<IResponsePostsLikes>(
+        `/posts/likes/${user.id}`,
+        token,
+      );
+
+      if (!data) {
+        throw new Error('a');
+      }
+
+      const allIdsPosts = data.map((post) => {
+        return post.post.id;
+      });
+
+      setIdsPosts(allIdsPosts);
+      setAllPosts(response);
+      return response;
     }
-
-    setAllPosts(response);
-
-    return response; 
-  }, [])
+    requestPosts();
+  }, [token, user.id]);
 
   return (
     <Container>
       <Header />
-        <Head>
-          <title>Home</title>
-        </Head>
+      <Head>
+        <title>Home</title>
+      </Head>
       <Content>
         <li>
-          {allPosts && allPosts.map(post => (
-              <ul key={post.id}>
-              <ImageContainer>
-                <img src="/static/img_default.png" alt="post_image" />
-              </ImageContainer>
-              <ContentPost isLiked={true}>
-                <h1>{post.title}</h1>
-                <h2>{post.subtitle}</h2>
-                <p>{post.description}</p>
-                <div>
-                  <Link href={`/post/${post.id}`}><button>Ver</button></Link>
-                  <div>
-                    <span>{post.likes}</span>
-                    <div>
-                      <img src="/static/icons/veHearth.png" alt="hearth_icon" />
-                      <img src="/static/icons/veHearthFilled.png" alt="hearthfilled_icon" />
-                    </div>
-                  </div>
-                </div>
-              </ContentPost>
-            </ul>
-          ))}
+          {allPosts &&
+            allPosts.map((post) => (
+              <Posts
+                post={post}
+                user={user}
+                token={token}
+                likedPost={idsPosts}
+                key={post.id}
+              />
+            ))}
         </li>
       </Content>
     </Container>
   );
-}
+};
 
 export default home;
