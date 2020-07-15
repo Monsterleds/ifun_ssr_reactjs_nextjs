@@ -13,7 +13,7 @@ export default createGlobalStyle`
     padding: 0 88px;
   }
 
-  body, button, span, a, input {
+  body, button, span, a, input, textarea {
     -webkit-font-smoothing: antialiased;
     font-family: 'Raleway', sans-serif;
   }
