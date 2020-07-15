@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 import { useFetch } from '../../hooks/useFetch';
 import { useAuth } from '../../hooks/auth';
@@ -66,6 +67,9 @@ const post: React.FC = () => {
 
   return (
     <Container>
+      <Head>
+        <title>{postDetails.title} | Ifun</title>
+      </Head>
       <Header />
       <Content>
         <HeaderContent>
