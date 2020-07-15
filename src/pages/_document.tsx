@@ -12,8 +12,13 @@ export default class MyDocument extends Document<ReturnInitialProps> {
   static getInitialProps({ renderPage }: any) {
     const sheet = new ServerStyleSheet();
 
-    const page = renderPage((App:React.FC) => (props: any) =>
-      sheet.collectStyles(<><App {...props} /><GlobalStyles /></>),
+    const page = renderPage((App: React.FC) => (props: any) =>
+      sheet.collectStyles(
+        <>
+          <App {...props} />
+          <GlobalStyles />
+        </>,
+      ),
     );
 
     const styleTags = sheet.getStyleElement();
@@ -24,17 +29,23 @@ export default class MyDocument extends Document<ReturnInitialProps> {
   render() {
     return (
       <html lang="en">
-      <Head>
-        <meta charSet="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        {this.props.styleTags}
-      </Head>
-      <body>
+        <Head>
+          <meta charSet="UTF-8" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+          />
+          {this.props.styleTags}
+        </Head>
+        <body>
           <Main />
           <NextScript />
-      </body>
+        </body>
       </html>
-    )
+    );
   }
 }

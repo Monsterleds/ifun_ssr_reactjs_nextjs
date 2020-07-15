@@ -1,4 +1,5 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import * as Yup from 'yup';
@@ -11,6 +12,7 @@ import { useAuth } from '../../hooks/auth';
 
 import Input from '../../components/Input';
 import Header from '../../components/InitialHeader';
+import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 
 import { Container, Content, InputContainer, SignInLinkContainer, Logo } from './styles';
@@ -22,11 +24,20 @@ interface UserData {
 }
 
 const SignIn: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
-  const { hookSignUp } = useAuth();
+  const { hookSignUp, token } = useAuth();
+
+  const redirect = useRouter();
+
+  if(token) {
+    redirect.push('/home');
+  }
 
   const handleOnSubmit = useCallback(async (data: UserData) => {
     try {
+      setIsLoading(true);
+
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
@@ -40,7 +51,11 @@ const SignIn: React.FC = () => {
       });
 
       await hookSignUp({ name: data.name, email: data.email, password: data.password });
+
+      redirect.push('/home');
     } catch(err) {
+      setIsLoading(false);
+
       if(err instanceof Yup.ValidationError){
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors);
@@ -54,6 +69,7 @@ const SignIn: React.FC = () => {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <Header isSelected="SignUp" />
       <Head>
         <title>SignUp | iFun</title>
@@ -75,7 +91,7 @@ const SignIn: React.FC = () => {
             <span>Senha</span>
             <Input name="password" type="password" placeholder="**********" />
               <SignInLinkContainer>
-                <Link href="/signin"><a>Já tenho uma conta</a></Link>
+                <Link href="/signin"><a onClick={() => setIsLoading(true)}>Já tenho uma conta</a></Link>
                 <img src="/static/icons/fiLogout.png" alt="login icon" />
               </SignInLinkContainer>
           </InputContainer>

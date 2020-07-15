@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/auth';
 import { useFetch } from '../../hooks/useFetch';
 
 import Header from '../../components/LoggedHeader';
+import Loading from '../../components/Loading';
 import Posts from '../../components/Posts';
 
 import { Container, Content } from './styles';
@@ -26,11 +27,22 @@ interface IResponsePostsLikes {
 const home: React.FC = () => {
   const [allPosts, setAllPosts] = useState([] as IPosts[]);
   const [idsPosts, setIdsPosts] = useState(['']);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { token, user } = useAuth();
+  const { token, user, hookAuthenticatedUser } = useAuth();
+
+  try {
+    hookAuthenticatedUser(true);
+  } catch (err) {
+    return <div />;
+  }
 
   useEffect(() => {
-    async function requestPosts(): Promise<IPosts[]> {
+    async function requestPosts(): Promise<void> {
+      if (!token) {
+        return;
+      }
+
       const response = await useFetch<IPosts>('/posts/all', token);
 
       if (!response) {
@@ -43,7 +55,7 @@ const home: React.FC = () => {
       );
 
       if (!data) {
-        throw new Error('a');
+        throw new Error('Database error, maybe is off');
       }
 
       const allIdsPosts = data.map((post) => {
@@ -52,13 +64,14 @@ const home: React.FC = () => {
 
       setIdsPosts(allIdsPosts);
       setAllPosts(response);
-      return response;
+      setIsLoading(false);
     }
     requestPosts();
   }, [token, user.id]);
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <Header />
       <Head>
         <title>Home</title>

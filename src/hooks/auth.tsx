@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
 import lscache from 'lscache';
 
 import api from '../services/api';
@@ -30,6 +31,7 @@ interface ContextAttributes {
   token: string;
   hookSignIn(credentials: SignInAttributes): Promise<void>;
   hookSignUp(credentials: SignUpAttributes): Promise<void>;
+  hookAuthenticatedUser(isPrivate: boolean): void;
 }
 
 const AuthContext = createContext<ContextAttributes>({} as ContextAttributes);
@@ -60,7 +62,6 @@ const AuthProvider: React.FC = ({ children }) => {
       lscache.set('@ifun/user', JSON.stringify(data.user));
 
       setUserToken(data.token);
-
       setUserData(data.user);
     },
     [setUserData, setUserToken],
@@ -77,9 +78,31 @@ const AuthProvider: React.FC = ({ children }) => {
     [],
   );
 
+  const hookAuthenticatedUser = useCallback(
+    (isPrivate: boolean): void => {
+      const router = useRouter();
+
+      if (!userToken && isPrivate) {
+        router.push('/signin');
+        return;
+      }
+
+      if (userToken && !isPrivate) {
+        router.push('/home');
+      }
+    },
+    [userToken],
+  );
+
   return (
     <AuthContext.Provider
-      value={{ user: userData, token: userToken, hookSignIn, hookSignUp }}
+      value={{
+        user: userData,
+        token: userToken,
+        hookSignIn,
+        hookSignUp,
+        hookAuthenticatedUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -11,11 +11,11 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const NavContent = styled.div`  
+export const NavContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 400px; 
+  max-width: 400px;
   width: 100%;
   height: 80px;
 
@@ -31,8 +31,8 @@ export const NavContent = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #FF4565;
-    color: #FF4565;
+    border: 2px solid #ff4565;
+    color: #ff4565;
     height: 40px;
     width: 40px;
     border-radius: 8px;
@@ -49,7 +49,7 @@ export const NavContent = styled.div`
       :last-of-type {
         opacity: 0;
       }
-    }    
+    }
 
     :first-of-type {
       width: 160px;
@@ -57,7 +57,7 @@ export const NavContent = styled.div`
     }
 
     :hover {
-      background-color: #FF4565;
+      background-color: #ff4565;
       color: #fff;
 
       img:first-of-type {
@@ -72,18 +72,20 @@ export const NavContent = styled.div`
 `;
 
 export const Links = styled.a<OptionsProps>`
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-        transition: 0.2s;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.2s;
 
-        :hover {
-          color: #FF4565;
-        }
+  :hover {
+    color: #ff4565;
+  }
 
-        ${props => props.isSelected && css`
-          color: #FF4565;
-        `}
+  ${(props) =>
+    props.isSelected &&
+    css`
+      color: #ff4565;
+    `}
 `;
 
 export const ImgContainer = styled.div`
@@ -107,5 +109,6 @@ export const ImgContainer = styled.div`
     margin-top: 8px;
     font-weight: 600;
     width: 100%;
+    color: #434344;
   }
 `;

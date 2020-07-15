@@ -48,22 +48,22 @@ export const InputContainer = styled.div`
 `;
 
 export const SignUpLinkContainer = styled.div`
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      align-self: flex-end;
-      margin-top: 16px;
-      transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  align-self: flex-end;
+  margin-top: 16px;
+  transition: 0.2s;
 
-      a {
-        margin-left: 10.5px;
-        color: #434344;
-        font-weight: 600;
-      }
+  a {
+    margin-left: 10.5px;
+    color: #434344;
+    font-weight: 600;
+  }
 
-      :hover {
-        opacity: 70%;
-      }
+  :hover {
+    opacity: 70%;
+  }
 `;
 
 export const Logo = styled.img`

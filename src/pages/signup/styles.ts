@@ -48,23 +48,23 @@ export const InputContainer = styled.div`
 `;
 
 export const SignInLinkContainer = styled.div`
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      align-self: flex-end;
-      margin-top: 16px;
-      margin-bottom: 29px;
-      transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  align-self: flex-end;
+  margin-top: 16px;
+  margin-bottom: 29px;
+  transition: 0.2s;
 
-      a {
-        margin-right: 10.5px;
-        color: #434344;
-        font-weight: 600;
-      }
+  a {
+    margin-right: 10.5px;
+    color: #434344;
+    font-weight: 600;
+  }
 
-      :hover {
-        opacity: 70%;
-      }
+  :hover {
+    opacity: 70%;
+  }
 `;
 
 export const Logo = styled.img`
