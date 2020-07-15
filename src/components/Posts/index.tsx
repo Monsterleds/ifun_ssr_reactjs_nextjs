@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 
+import Loading from '../Loading';
+
 import api from '../../services/api';
 
 import { Container, ImageContainer, ContentPost } from './styles';
@@ -29,6 +31,7 @@ interface ResponseLikes {
 
 const Posts: React.FC<PostAttributes> = ({ post, user, token, likedPost }) => {
   const [isLiked, setIsLiked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [numberLikes, setNumberLikes] = useState(post.likes);
 
   useEffect(() => {
@@ -63,6 +66,7 @@ const Posts: React.FC<PostAttributes> = ({ post, user, token, likedPost }) => {
 
   return (
     <Container key={post.id}>
+      {isLoading && <Loading />}
       <ImageContainer>
         <img src="/static/img_default.png" alt="post_image" />
       </ImageContainer>
@@ -72,7 +76,9 @@ const Posts: React.FC<PostAttributes> = ({ post, user, token, likedPost }) => {
         <p>{post.description}</p>
         <div>
           <Link href={`/post/${post.id}`}>
-            <button type="button">Ver</button>
+            <button type="button" onClick={() => setIsLoading(true)}>
+              Ver
+            </button>
           </Link>
           <div>
             <span>{numberLikes}</span>

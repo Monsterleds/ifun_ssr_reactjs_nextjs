@@ -43,13 +43,13 @@ const home: React.FC = () => {
         return;
       }
 
-      const response = await useFetch<IPosts>('/posts/all', token);
+      const response = await useFetch<IPosts[]>('/posts/all', token);
 
       if (!response) {
         throw new Error('Database error, maybe is off');
       }
 
-      const data = await useFetch<IResponsePostsLikes>(
+      const data = await useFetch<IResponsePostsLikes[]>(
         `/posts/likes/${user.id}`,
         token,
       );
@@ -72,7 +72,7 @@ const home: React.FC = () => {
   return (
     <Container>
       {isLoading && <Loading />}
-      <Header />
+      <Header isHome />
       <Head>
         <title>Home</title>
       </Head>

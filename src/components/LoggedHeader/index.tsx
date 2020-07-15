@@ -9,9 +9,10 @@ import { NavContent, ImgContainer, Links, Container } from './styles';
 
 interface HeaderProps {
   isSelected?: string;
+  isHome?: boolean;
 }
 
-const InitialHeader: React.FC<HeaderProps> = ({ isSelected }) => {
+const InitialHeader: React.FC<HeaderProps> = ({ isSelected, isHome }) => {
   const { user } = useAuth();
 
   const handleClearStorage = useCallback(() => {
@@ -26,7 +27,7 @@ const InitialHeader: React.FC<HeaderProps> = ({ isSelected }) => {
       <Link href="/home">
         <ImgContainer>
           <img src="/static/logo.png" alt="logo" />
-          <span>Bem vindo(a), {user.name && user.name}</span>
+          {isHome && <span>Bem vindo(a), {user.name && user.name}</span>}
         </ImgContainer>
       </Link>
       <NavContent>
