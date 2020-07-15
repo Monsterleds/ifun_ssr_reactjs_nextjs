@@ -61,6 +61,7 @@ export const ContentPost = styled.div<PostAttributes>`
         right: 0;
         bottom: -4px;
         cursor: pointer;
+        transition: 0.2s;
 
         :last-of-type {
           opacity: 0;

@@ -19,7 +19,7 @@ interface PostAttributes {
     email: string;
   };
   token: string;
-  likedPost: Array<''>;
+  likedPost: string[];
 }
 
 interface ResponseLikes {

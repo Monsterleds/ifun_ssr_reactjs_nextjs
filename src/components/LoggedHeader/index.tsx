@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
+import lscache from 'lscache';
 import Link from 'next/link';
+import router from 'next/router';
 
 import { useAuth } from '../../hooks/auth';
 
@@ -12,28 +14,39 @@ interface HeaderProps {
 const InitialHeader: React.FC<HeaderProps> = ({ isSelected }) => {
   const { user } = useAuth();
 
+  const handleClearStorage = useCallback(() => {
+    lscache.remove('@ifun/user');
+    lscache.remove('@ifun/token');
+
+    router.reload();
+  }, []);
+
   return (
     <Container>
-        <Link href="/home">
-          <ImgContainer>
-            <img src="/static/logo.png" alt="logo" />
-            <span>Bem vindo(a), {user.name && user.name}</span>
-          </ImgContainer>
+      <Link href="/home">
+        <ImgContainer>
+          <img src="/static/logo.png" alt="logo" />
+          <span>Bem vindo(a), {user.name && user.name}</span>
+        </ImgContainer>
+      </Link>
+      <NavContent>
+        <Link href="/">
+          <Links isSelected={isSelected === 'YourPosts' && true}>
+            Suas postagens
+          </Links>
         </Link>
-        <NavContent>
-          <Link href="/"><Links isSelected={isSelected === 'YourPosts' && true}>Suas postagens</Links></Link>
-          <div>
-            <Link href="/signin"><button>Compartilhar</button></Link>
-            <Link href="/signup">
-              <button>
-                <img src="/static/icons/fiPower.png" alt="power_icon"/>
-                <img src="/static/icons/fiPower_hover.png" alt="power_hover"/>
-              </button>
-            </Link>
-          </div>
-        </NavContent>
-      </Container>
-  )
-}
+        <div>
+          <Link href="/signin">
+            <button type="button">Compartilhar</button>
+          </Link>
+          <button type="button" onClick={handleClearStorage}>
+            <img src="/static/icons/fiPower.png" alt="power_icon" />
+            <img src="/static/icons/fiPower_hover.png" alt="power_hover" />
+          </button>
+        </div>
+      </NavContent>
+    </Container>
+  );
+};
 
 export default InitialHeader;

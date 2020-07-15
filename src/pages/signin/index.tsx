@@ -1,4 +1,5 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import * as Yup from 'yup';
@@ -11,6 +12,7 @@ import { useAuth } from '../../hooks/auth';
 
 import Input from '../../components/Input';
 import Header from '../../components/InitialHeader';
+import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 
 import { Container, Content, InputContainer, SignUpLinkContainer, Logo } from './styles';
@@ -21,11 +23,21 @@ interface UserData {
 }
 
 const SignIn: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
-  const { hookSignIn } = useAuth();
+  const { hookSignIn, hookAuthenticatedUser } = useAuth();
+  const redirect = useRouter();
+
+  try {
+    hookAuthenticatedUser(false);
+  } catch (err) {
+    return <div />;
+  }
 
   const handleOnSubmit = useCallback(async (data: UserData) => {
    try {
+      setIsLoading(true);
+
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
@@ -38,10 +50,14 @@ const SignIn: React.FC = () => {
       }));
 
       await hookSignIn({ email: data.email, password: data.password });
+
+      redirect.push('/home');
    } catch(err) {
+      setIsLoading(false)
+
      if(err instanceof Yup.ValidationError) {
       const errors = getValidationErrors(err);
-      
+
       formRef.current?.setErrors(errors);
 
       return;
@@ -53,6 +69,7 @@ const SignIn: React.FC = () => {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <Header isSelected="SignIn" />
       <Head>
         <title>SignIn | iFun</title>
@@ -70,7 +87,7 @@ const SignIn: React.FC = () => {
             <Input name="password" type="password" placeholder="**********" />
               <SignUpLinkContainer>
                 <img src="/static/icons/fiLogin.png" alt="login icon" />
-                <Link href="/signup"><a>Não tenho uma conta</a></Link>
+                <Link href="/signup"><a onClick={() => setIsLoading(true)}>Não tenho uma conta</a></Link>
             </SignUpLinkContainer>
           </InputContainer>
           <Button type="submit">Entrar</Button>
