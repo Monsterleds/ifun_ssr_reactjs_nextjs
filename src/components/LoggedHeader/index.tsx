@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+
+import { useAuth } from '../../hooks/auth';
 
 import { NavContent, ImgContainer, Links, Container } from './styles';
 
@@ -8,12 +10,14 @@ interface HeaderProps {
 }
 
 const InitialHeader: React.FC<HeaderProps> = ({ isSelected }) => {
+  const { user } = useAuth();
+
   return (
     <Container>
         <Link href="/home">
           <ImgContainer>
             <img src="/static/logo.png" alt="logo" />
-            <span>Bem vindo(a), Fulano</span>
+            <span>Bem vindo(a), {user.name && user.name}</span>
           </ImgContainer>
         </Link>
         <NavContent>

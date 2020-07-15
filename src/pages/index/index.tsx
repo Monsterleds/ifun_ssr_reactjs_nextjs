@@ -23,12 +23,14 @@ const Home: NextPage<HomeInitialProps> = () => {
           <h1>Compartilhe</h1>
           <h1>Suas conquistas!</h1>
 
-          <Link href="/signin"><button>Entrar!</button></Link>
+          <Link href="/signin">
+            <button type="button">Entrar!</button>
+          </Link>
         </div>
         <img src="/static/background_home.png" alt="logo" />
       </Content>
     </Container>
   );
-}
+};
 
 export default Home;
