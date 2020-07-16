@@ -3,7 +3,10 @@ import { NextPage, NextPageContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
+import { useAuth } from '../../hooks/auth';
+
 import Header from '../../components/InitialHeader';
+import Toast from '../../components/Toast';
 
 import { Container, Content } from './styles';
 
@@ -12,9 +15,12 @@ interface HomeInitialProps extends NextPageContext {
 }
 
 const Home: NextPage<HomeInitialProps> = () => {
+  const { error } = useAuth();
+
   return (
     <Container>
       <Header isSelected="Home" />
+      {error && <Toast messages={[{ id: '1' }]} />}
       <Head>
         <title>iFun</title>
       </Head>

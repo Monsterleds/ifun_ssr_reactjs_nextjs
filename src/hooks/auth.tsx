@@ -29,13 +29,16 @@ interface AuthenticatedAttributes {
 interface ContextAttributes {
   user: UserAttributes;
   token: string;
+  error: boolean;
   hookSignIn(credentials: SignInAttributes): Promise<void>;
   hookSignUp(credentials: SignUpAttributes): Promise<void>;
   hookAuthenticatedUser(isPrivate: boolean): void;
+  hookSetErrors(error: boolean): void;
 }
 
 const AuthContext = createContext<ContextAttributes>({} as ContextAttributes);
 const AuthProvider: React.FC = ({ children }) => {
+  const [isError, setIsError] = useState(false);
   const [userToken, setUserToken] = useState('');
   const [userData, setUserData] = useState<UserAttributes>(() => {
     const user = lscache.get('@ifun/user');
@@ -94,14 +97,20 @@ const AuthProvider: React.FC = ({ children }) => {
     [userToken],
   );
 
+  const hookSetErrors = useCallback((error: boolean): void => {
+    setIsError(error);
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
         user: userData,
         token: userToken,
+        error: isError,
         hookSignIn,
         hookSignUp,
         hookAuthenticatedUser,
+        hookSetErrors,
       }}
     >
       {children}
