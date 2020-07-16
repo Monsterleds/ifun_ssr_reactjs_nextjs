@@ -1,4 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface HearthContainerAttributes {
+  isClickable: boolean;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -79,14 +83,15 @@ export const HeaderContent = styled.div`
 
     button {
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-top: 154px;
       font-size: 24px;
       font-weight: 600;
 
-      img {
-        width: 20px;
-        height: 18px;
-        margin-left: 6px;
+      div {
+        margin-left: 16px;
       }
     }
   }
@@ -118,5 +123,37 @@ export const ContainerComment = styled.div`
 
   span {
     margin-top: 17px;
+  }
+`;
+
+export const ImageHearthCotainer = styled.div<HearthContainerAttributes>`
+  position: relative;
+  background: #000;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    position: absolute;
+    width: 20px;
+    height: 18px;
+
+    :last-child {
+      opacity: 0;
+      width: 18px;
+      height: 18px;
+    }
+
+    ${(props) =>
+      props.isClickable &&
+      css`
+        :first-child {
+          opacity: 0;
+        }
+        :last-child {
+          opacity: 1;
+        }
+      `}
   }
 `;

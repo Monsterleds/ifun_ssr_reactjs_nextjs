@@ -49,18 +49,10 @@ const home: React.FC = () => {
       try {
         const response = await useFetch<IPosts[]>('/posts/all', token);
 
-        if (!response) {
-          throw new Error('Database maybe is off');
-        }
-
         const data = await useFetch<IResponsePostsLikes[]>(
           `/posts/likes/${user.id}`,
           token,
         );
-
-        if (!data) {
-          throw new Error('Database maybe is off');
-        }
 
         const allIdsPosts = data.map((post) => {
           return post.post.id;
@@ -70,7 +62,7 @@ const home: React.FC = () => {
         setAllPosts(response);
         setIsLoading(false);
       } catch (err) {
-        hookSetErrors(true);
+        hookSetErrors(err.message);
         router.push('/');
       }
     }

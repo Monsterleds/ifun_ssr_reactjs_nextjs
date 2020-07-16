@@ -29,16 +29,16 @@ interface AuthenticatedAttributes {
 interface ContextAttributes {
   user: UserAttributes;
   token: string;
-  error: boolean;
+  error: string;
   hookSignIn(credentials: SignInAttributes): Promise<void>;
   hookSignUp(credentials: SignUpAttributes): Promise<void>;
   hookAuthenticatedUser(isPrivate: boolean): void;
-  hookSetErrors(error: boolean): void;
+  hookSetErrors(errorMessage: string): void;
 }
 
 const AuthContext = createContext<ContextAttributes>({} as ContextAttributes);
 const AuthProvider: React.FC = ({ children }) => {
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState('');
   const [userToken, setUserToken] = useState('');
   const [userData, setUserData] = useState<UserAttributes>(() => {
     const user = lscache.get('@ifun/user');
@@ -97,8 +97,8 @@ const AuthProvider: React.FC = ({ children }) => {
     [userToken],
   );
 
-  const hookSetErrors = useCallback((error: boolean): void => {
-    setIsError(error);
+  const hookSetErrors = useCallback((errorMessage: string): void => {
+    setIsError(errorMessage);
   }, []);
 
   return (
@@ -122,7 +122,7 @@ function useAuth(): ContextAttributes {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('DEU MERDA AMIGO');
+    throw new Error('Você precisa chamar o Provider antes de usar o contexto');
   }
 
   return context;
