@@ -20,7 +20,7 @@ const Home: NextPage<HomeInitialProps> = () => {
   return (
     <Container>
       <Header isSelected="Home" />
-      {error && <Toast messages={[{ id: '1' }]} />}
+      {!!error && <Toast messages={[{ id: '1', message: error }]} />}
       <Head>
         <title>iFun</title>
       </Head>

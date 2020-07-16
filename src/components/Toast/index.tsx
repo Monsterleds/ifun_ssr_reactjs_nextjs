@@ -6,6 +6,7 @@ import { Container, ContainerToast } from './styles';
 interface MessagesAttributes {
   messages: {
     id: string;
+    message: string;
   }[];
 }
 
@@ -14,7 +15,7 @@ const Toast: React.FC<MessagesAttributes> = ({ messages }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setToasts(messages.filter((message) => message.id === '12'));
+      setToasts([]);
     }, 3000);
   }, [messages]);
 
@@ -26,13 +27,11 @@ const Toast: React.FC<MessagesAttributes> = ({ messages }) => {
 
   return (
     <Container>
-      {toastsWithTransitions.map(({ key, props }) => (
+      {toastsWithTransitions.map(({ key, item, props }) => (
         <ContainerToast key={key} style={props}>
           <div>
             <h1>Algo está errado!</h1>
-            <p>
-              Erro ao criar uma query no banco de dados, possívelmente offline
-            </p>
+            <p>{item.message}</p>
           </div>
         </ContainerToast>
       ))}

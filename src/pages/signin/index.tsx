@@ -14,6 +14,7 @@ import Input from '../../components/Input';
 import Header from '../../components/InitialHeader';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
+import Toast from '../../components/Toast';
 
 import { Container, Content, InputContainer, SignUpLinkContainer, Logo } from './styles';
 
@@ -25,7 +26,7 @@ interface UserData {
 const SignIn: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
-  const { hookSignIn, hookAuthenticatedUser } = useAuth();
+  const { hookSignIn, hookAuthenticatedUser, error } = useAuth();
   const redirect = useRouter();
 
   try {
@@ -63,13 +64,17 @@ const SignIn: React.FC = () => {
       return;
      }
 
-     console.error(err);
+     formRef.current?.setErrors({
+       email: 'Email ou senha incorretos',
+       password: 'Email ou senha incorretos',
+     });
    }
   }, []);
 
   return (
     <Container>
       {isLoading && <Loading />}
+      {!!error && <Toast messages={[{ id: '1', message: error }]} />}
       <Header isSelected="SignIn" />
       <Head>
         <title>SignIn | iFun</title>

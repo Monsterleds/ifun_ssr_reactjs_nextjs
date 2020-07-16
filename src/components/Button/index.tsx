@@ -2,10 +2,11 @@ import React, { ButtonHTMLAttributes } from 'react';
 
 import { Container } from './styles';
 
-const Button: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({
-  children,
-  ...rest
-}) => {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  isClickable?: boolean;
+}
+
+const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
   return <Container {...rest}>{children}</Container>;
 };
 

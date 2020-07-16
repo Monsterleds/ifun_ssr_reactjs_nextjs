@@ -1,7 +1,11 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { shade } from 'polished';
 
-export const Container = styled.button`
+interface ContainerButtonAttributes {
+  isClickable?: boolean;
+}
+
+export const Container = styled.button<ContainerButtonAttributes>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,10 +16,21 @@ export const Container = styled.button`
   background-color: #ff4565;
   width: 254px;
   height: 60px;
-  border: 0;
+  border: 2px solid #ff4565;
   transition: 0.2s;
 
   :hover {
     background-color: ${shade(0.2, '#FF4565')};
   }
+
+  ${(props) =>
+    props.isClickable &&
+    css`
+      color: #ff4565;
+      background-color: #fff;
+
+      :hover {
+        background-color: ${shade(0.1, '#fff')};
+      }
+    `}
 `;
