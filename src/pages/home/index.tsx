@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { useAuth } from '../../hooks/auth';
 import { useFetch } from '../../hooks/useFetch';
@@ -29,7 +30,9 @@ const home: React.FC = () => {
   const [idsPosts, setIdsPosts] = useState(['']);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { token, user, hookAuthenticatedUser } = useAuth();
+  const router = useRouter();
+
+  const { token, user, hookAuthenticatedUser, hookSetErrors } = useAuth();
 
   try {
     hookAuthenticatedUser(true);
@@ -43,31 +46,36 @@ const home: React.FC = () => {
         return;
       }
 
-      const response = await useFetch<IPosts[]>('/posts/all', token);
+      try {
+        const response = await useFetch<IPosts[]>('/posts/all', token);
 
-      if (!response) {
-        throw new Error('Database error, maybe is off');
+        if (!response) {
+          throw new Error('Database maybe is off');
+        }
+
+        const data = await useFetch<IResponsePostsLikes[]>(
+          `/posts/likes/${user.id}`,
+          token,
+        );
+
+        if (!data) {
+          throw new Error('Database maybe is off');
+        }
+
+        const allIdsPosts = data.map((post) => {
+          return post.post.id;
+        });
+
+        setIdsPosts(allIdsPosts);
+        setAllPosts(response);
+        setIsLoading(false);
+      } catch (err) {
+        hookSetErrors(true);
+        router.push('/');
       }
-
-      const data = await useFetch<IResponsePostsLikes[]>(
-        `/posts/likes/${user.id}`,
-        token,
-      );
-
-      if (!data) {
-        throw new Error('Database error, maybe is off');
-      }
-
-      const allIdsPosts = data.map((post) => {
-        return post.post.id;
-      });
-
-      setIdsPosts(allIdsPosts);
-      setAllPosts(response);
-      setIsLoading(false);
     }
     requestPosts();
-  }, [token, user.id]);
+  }, [token, user.id, router, hookSetErrors]);
 
   return (
     <Container>
