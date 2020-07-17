@@ -72,7 +72,7 @@ export const HeaderContent = styled.div`
 
     h2 {
       color: #434344;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 36px;
     }
 

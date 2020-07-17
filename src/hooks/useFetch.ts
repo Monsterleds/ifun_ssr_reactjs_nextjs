@@ -17,9 +17,10 @@ export async function useFetch<Data = any>(
     if (err.response) {
       console.error(err.response);
 
-      if (err.response.status === 401) {
+      if (err.response.status === 401 || err.response.status === 400) {
         lscache.remove('@ifun/token');
         lscache.remove('@ifun/user');
+        window.location.reload();
       }
       throw err.response.data;
     }

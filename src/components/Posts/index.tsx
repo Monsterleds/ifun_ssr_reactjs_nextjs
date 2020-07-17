@@ -5,7 +5,15 @@ import Loading from '../Loading';
 
 import api from '../../services/api';
 
-import { Container, ImageContainer, ContentPost } from './styles';
+import {
+  Container,
+  ImageContainer,
+  ContentPost,
+  ButtonsContainer,
+  ThreshIcon,
+  DeleteContent,
+  BackgroundContainer,
+} from './styles';
 
 interface PostAttributes {
   post: {
@@ -22,6 +30,7 @@ interface PostAttributes {
   };
   token: string;
   likedPost: string[];
+  editable?: boolean;
 }
 
 interface ResponseLikes {
@@ -29,8 +38,15 @@ interface ResponseLikes {
   likes: number;
 }
 
-const Posts: React.FC<PostAttributes> = ({ post, user, token, likedPost }) => {
+const Posts: React.FC<PostAttributes> = ({
+  post,
+  user,
+  token,
+  likedPost,
+  editable,
+}) => {
   const [isLiked, setIsLiked] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [numberLikes, setNumberLikes] = useState(post.likes);
 
@@ -64,22 +80,64 @@ const Posts: React.FC<PostAttributes> = ({ post, user, token, likedPost }) => {
     }
   }, [post.id, user.id, token, isLiked]);
 
+  const handleDeletePost = useCallback(async (): Promise<void> => {
+    await api.delete(`/posts/${post.id}/${user.id}`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    window.location.reload();
+  }, [post.id, user.id, token]);
+
   return (
     <Container key={post.id}>
+      {isDelete && (
+        <>
+          <BackgroundContainer onClick={() => setIsDelete(false)} />
+          <DeleteContent>
+            <h5>Você tem certeza que deseja deletar?</h5>
+            <div>
+              <button type="button" onClick={handleDeletePost}>
+                Sim
+                <img src="/static/icons/faSadFace.png" alt="sad_face" />
+              </button>
+              <button type="button" onClick={() => setIsDelete(false)}>
+                Não
+                <img src="/static/icons/enHappyFace.png" alt="happy_face" />
+              </button>
+            </div>
+          </DeleteContent>
+        </>
+      )}
       {isLoading && <Loading />}
       <ImageContainer>
         <img src="/static/img_default.png" alt="post_image" />
       </ImageContainer>
       <ContentPost isLiked={isLiked}>
+        {editable && (
+          <ThreshIcon
+            src="/static/icons/fiThresh.png"
+            alt="delete_icon"
+            onClick={() => setIsDelete(true)}
+          />
+        )}
         <h1>{post.title}</h1>
         <h2>{post.subtitle}</h2>
         <p>{post.description}</p>
         <div>
-          <Link href={`/post/${post.id}`}>
-            <button type="button" onClick={() => setIsLoading(true)}>
-              Ver
-            </button>
-          </Link>
+          <ButtonsContainer editable={editable}>
+            <Link href={`/post/${post.id}`}>
+              <button type="button" onClick={() => setIsLoading(true)}>
+                Ver
+              </button>
+            </Link>
+            {editable && (
+              <Link href={`/user/post/edit/${post.id}`}>
+                <button type="button" onClick={() => setIsLoading(true)}>
+                  Editar
+                </button>
+              </Link>
+            )}
+          </ButtonsContainer>
           <div>
             <span>{numberLikes}</span>
             <div onClick={handleLikedToggle}>

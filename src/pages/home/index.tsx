@@ -63,7 +63,7 @@ const home: React.FC = () => {
         setIsLoading(false);
       } catch (err) {
         hookSetErrors(err.message);
-        router.push('/');
+        router.push('/signin');
       }
     }
     requestPosts();
@@ -72,7 +72,7 @@ const home: React.FC = () => {
   return (
     <Container>
       {isLoading && <Loading />}
-      <Header isHome />
+      <Header isSelected="Home" />
       <Head>
         <title>Home</title>
       </Head>
