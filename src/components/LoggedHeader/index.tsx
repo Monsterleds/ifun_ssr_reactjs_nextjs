@@ -7,7 +7,13 @@ import { useAuth } from '../../hooks/auth';
 
 import Loading from '../Loading';
 
-import { NavContent, ImgContainer, Links, Container } from './styles';
+import {
+  NavContent,
+  ImgContainer,
+  Links,
+  Container,
+  SharedButton,
+} from './styles';
 
 interface HeaderProps {
   isSelected?: string;
@@ -57,8 +63,14 @@ const InitialHeader: React.FC<HeaderProps> = ({ isSelected }) => {
           </Links>
         </Link>
         <div>
-          <Link href="/signin">
-            <button type="button">Compartilhar</button>
+          <Link href="/user/post/share">
+            <SharedButton
+              type="button"
+              onClick={() => handleSetLoadingPage('Shared')}
+              isSelected={isSelected === 'Shared' && true}
+            >
+              Compartilhar
+            </SharedButton>
           </Link>
           <button type="button" onClick={handleClearStorage}>
             <img src="/static/icons/fiPower.png" alt="power_icon" />

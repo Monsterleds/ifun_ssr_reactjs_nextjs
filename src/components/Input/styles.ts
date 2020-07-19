@@ -37,18 +37,24 @@ export const Container = styled.label<InputProps>`
     }
   }
 
-  ${props => props.isFilled && css`
-    border: 2px solid #080077;
-  `}
+  ${(props) =>
+    props.isFilled &&
+    css`
+      border: 2px solid #080077;
+    `}
 
-  ${props => props.isSelected && css`
-    border: 2px solid ${lighten(0.3,'#080077')};
-  `}
+  ${(props) =>
+    props.isSelected &&
+    css`
+      border: 2px solid ${lighten(0.3, '#080077')};
+    `}
 
-  ${props => props.isError && css`
-    border: 2px solid #FF4565;
-    margin-bottom: 16px;
-  `}
+  ${(props) =>
+    props.isError &&
+    css`
+      border: 2px solid #ff4565;
+      margin-bottom: 16px;
+    `}
 
   div {
     position: absolute;
@@ -56,7 +62,7 @@ export const Container = styled.label<InputProps>`
     align-items: center;
     flex: 1;
     top: 80px;
-    
+
     span {
       color: #FF4565;
       font-size: 16px;

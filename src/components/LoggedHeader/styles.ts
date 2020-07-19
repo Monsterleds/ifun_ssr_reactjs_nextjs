@@ -32,7 +32,6 @@ export const NavContent = styled.div`
     align-items: center;
     justify-content: center;
     border: 2px solid #ff4565;
-    color: #ff4565;
     height: 40px;
     width: 40px;
     border-radius: 8px;
@@ -111,4 +110,26 @@ export const ImgContainer = styled.div`
     width: 100%;
     color: #434344;
   }
+`;
+
+export const SharedButton = styled.button<OptionsProps>`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ff4565;
+  height: 40px;
+  width: 40px;
+  color: #ff4565;
+  border-radius: 8px;
+  transition: 0.2s;
+  font-weight: bold;
+  font-size: 16px;
+
+  ${(props) =>
+    props.isSelected &&
+    css`
+      background-color: #ff4565;
+      color: #fff;
+    `}
 `;

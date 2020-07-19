@@ -81,11 +81,15 @@ const Posts: React.FC<PostAttributes> = ({
   }, [post.id, user.id, token, isLiked]);
 
   const handleDeletePost = useCallback(async (): Promise<void> => {
-    await api.delete(`/posts/${post.id}/${user.id}`, {
-      headers: { authorization: `Bearer ${token}` },
-    });
+    try {
+      await api.delete(`/posts/${user.id}/${post.id}`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
 
-    window.location.reload();
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
   }, [post.id, user.id, token]);
 
   return (
