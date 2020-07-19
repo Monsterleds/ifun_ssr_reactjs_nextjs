@@ -122,7 +122,7 @@ const post: React.FC = () => {
   }, [token, id, user.name, postDetails]);
 
   const handleLikePost = useCallback(async () => {
-    await api.put(
+    const { data } = await api.put(
       '/posts/likes',
       {
         id_user: user.id,
@@ -133,12 +133,18 @@ const post: React.FC = () => {
       },
     );
 
+    let newLikes = postDetails.likes + 1;
+
+    if (!data.alreadyLiked) {
+      newLikes -= 2;
+    }
+
     const newPost = {
       id: postDetails.id,
       title: postDetails.title,
       subtitle: postDetails.subtitle,
       description: postDetails.description,
-      likes: postDetails.likes + 1,
+      likes: newLikes,
       avatar_id: postDetails.avatar_id,
       comments: postDetails.comments,
     };

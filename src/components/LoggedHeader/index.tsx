@@ -1,19 +1,30 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import lscache from 'lscache';
 import Link from 'next/link';
 import router from 'next/router';
 
 import { useAuth } from '../../hooks/auth';
 
+import Loading from '../Loading';
+
 import { NavContent, ImgContainer, Links, Container } from './styles';
 
 interface HeaderProps {
   isSelected?: string;
-  isHome?: boolean;
 }
 
-const InitialHeader: React.FC<HeaderProps> = ({ isSelected, isHome }) => {
+const InitialHeader: React.FC<HeaderProps> = ({ isSelected }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
+
+  const handleSetLoadingPage = useCallback(
+    (page: string): void => {
+      if (page !== isSelected) {
+        setIsLoading(true);
+      }
+    },
+    [isSelected],
+  );
 
   const handleClearStorage = useCallback(() => {
     lscache.remove('@ifun/user');
@@ -24,16 +35,25 @@ const InitialHeader: React.FC<HeaderProps> = ({ isSelected, isHome }) => {
 
   return (
     <Container>
-      <Link href="/home">
-        <ImgContainer>
-          <img src="/static/logo.png" alt="logo" />
-          {isHome && <span>Bem vindo(a), {user.name && user.name}</span>}
-        </ImgContainer>
-      </Link>
+      {isLoading && <Loading />}
+      <ImgContainer>
+        <Link href="/home">
+          <img
+            src="/static/logo.png"
+            alt="logo"
+            onClick={() => handleSetLoadingPage('Home')}
+          />
+        </Link>
+        {isSelected === 'Home' && (
+          <span>Bem vindo(a), {user.name && user.name}</span>
+        )}
+      </ImgContainer>
       <NavContent>
-        <Link href="/">
+        <Link href="/user/post/all">
           <Links isSelected={isSelected === 'YourPosts' && true}>
-            Suas postagens
+            <span onClick={() => handleSetLoadingPage('YourPosts')}>
+              Suas postagens
+            </span>
           </Links>
         </Link>
         <div>
