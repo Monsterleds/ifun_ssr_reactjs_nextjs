@@ -77,7 +77,7 @@ const AllPosts: React.FC = () => {
       {isLoading && <Loading />}
       <Header isSelected="YourPosts" />
       <Head>
-        <title>Home</title>
+        <title>Your Posts | iFun</title>
       </Head>
       <Content>
         <li>
