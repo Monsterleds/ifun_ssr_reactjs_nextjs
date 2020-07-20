@@ -73,23 +73,25 @@ $ npm install
 ## Conectando ao Server
 Para iniciar, primeiramente você precisa startar o servidor do Back-end, quando estiver na pasta, execute o comando:
 ```
-$ yarn start
+$ yarn dev:server
 ```
 _Ou_
 ```
-$ npm start
+$ npm dev:server
 ```
+
+_(lembre-se de ajustar o .env)_
 ## Rodando
 #### Web
 ```
 $ cd ifun_ssr_reactjs_nextjs
 ```
 ```
-$ yarn start
+$ yarn dev
 ```
 _Ou_
 ```
-$ npm start
+$ npm dev
 ```
 
 ## Construído com: 
