@@ -22,6 +22,7 @@ interface PostAttributes {
     subtitle: string;
     description: string;
     likes: number;
+    avatar_id?: string;
   };
   user: {
     id: string;
@@ -114,7 +115,11 @@ const Posts: React.FC<PostAttributes> = ({
       )}
       {isLoading && <Loading />}
       <ImageContainer>
-        <img src="/static/img_default.png" alt="post_image" />
+        {post.avatar_id ? (
+          <img src={post.avatar_id} alt="post_image" />
+        ) : (
+          <img src="/static/img_default.png" alt="post_image" />
+        )}
       </ImageContainer>
       <ContentPost isLiked={isLiked}>
         {editable && (
